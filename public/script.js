@@ -24,6 +24,10 @@ const showFoods = async() => {
         h3.innerHTML = food.name;
         a.append(h3);
 
+        const img = document.createElement("img");
+        img.src = food.img;
+        section.append(img);
+
         a.onclick = (e) => {
             e.preventDefault();
             displayDetails(food);
