@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Foods</h1>
+        <a href="#" id="add-link">+</a>
+    </header>
+
+    <div class="columns two-columns">
+        <div id="food-list" class="columns"></div>
+        <div id="food-details-column">
+            <h2>Details</h2>
+
+            <div id="food-details"></div>
+        </div>
+    </div>
+    <div id="add-edit-food-container" class="dialog transparent">
+        <span class="close">&times;</span>
+
+        <h3 id="add-edit-title">Food</h3>
+        <form id="add-edit-food-form" method="post">
+            <input type="hidden" name="id" value="-1" />
+            <p>
+                <label for="name ">Food Name:</label>
+                <input type="text" id="name" name="name" required />
+            </p>
+            <p>
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" required />
+            </p>
+
+            <p id="condiments-p ">
+                <label class="inline">Condiments:</label>
+                <a href="#" id="add-condiment">Add Condiment</a>
+            <section id="condiment-boxes"></section>
+            </p>
+            <p>
+                <button type="submit">Submit</button>
+            </p>
+        </form>
+    </div>
+</body>
+
+</html>
