@@ -58,7 +58,7 @@ const displayDetails = (food) => {
     p.innerHTML = food.description;
 
     const ul = document.createElement("ul");
-    foodDetails.append("ul");
+    foodDetails.append(ul);
     //console.log(food.condiments);
     food.condiments.forEach((condiment) => {
         const li = document.createElement("li");
@@ -76,14 +76,14 @@ const displayDetails = (food) => {
     dLink.onclick = (e) => {
     e.preventDefault();
     deleteFood(food);
-    console.log("deleting");
+    //console.log("deleting");
     };
 
     populateEditForm(food);
 };
 
 const deleteFood = async(food) => {
-    let response = await fetch(`/api/foods/${food.id}`,{
+    let response = await fetch(`/api/foods/${food._id}`,{
         method: "DELETE",
         headers: {"Content-Type": "application/json;charset=utf-8"}
     });
@@ -125,8 +125,9 @@ const addEditFood = async (e) => {
     let response;
     formData.append("condiments", getCondiments());
 
-    if(form.id.value == -1){
-        formData.delete("id");
+    if(form._id.value == -1){
+        formData.delete("_id");
+        console.log(...formData);
         
         response = await fetch("/api/foods", {
             method:"POST",

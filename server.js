@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 
 const upload = multer({dest:__dirname + "/public/images"});
 
-mongoose.connect("mongodb://localhost/foods")
+mongoose.connect("mongodb+srv://cmelmore:sxLn585PhQg9P13u@cluster0.av3lgun.mongodb.net/")
 .then(() => console.log("connected to mongodb"))
 .catch((err)=> console.err("could not connect", err));
 
@@ -29,50 +29,19 @@ app.get("/api/foods", (req, res) => {
     getFoods(res);
 });
 
+const getFoods = async(res)=>{
+    const foods = await Food.find();
+    res.send(foods);
+}
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-let foods = [{
-    id:1,
-    name:"Hot Dog",
-    description: "Weiner on a bun",
-    condiments:
-    [
-        "chili",
-        "cheese",
-        "mayo"
-    ],
-},
-    {
-        id:2,
-        name:"Hamburger",
-        description:"Patty with condiments in a bun",
-        review:"Wack!", rating: "8/10",
-        condiments:
-        [
-            "cheese",
-            "mayo",
-            "mustard"
-        ],
-    },
-    {
-        id:3,
-        name:"Pizza",
-        description:"Bread with melted cheese",
-        review:"So delicious!", rating: "9/10",
-        condiments:
-        [
-            "cheese",
-            "sausage",
-            "olives"
-        ],
-    }
-]
 
 
 
-app.post("/api/foods", (req, res) => {
+app.post("/api/foods", upload.single("img"), (req, res) => {
     console.log(req.body);
     const result = validateFood(req.body);
 
@@ -82,7 +51,6 @@ app.post("/api/foods", (req, res) => {
     }
 
     const food = new Food ({
-        id: foods.length+1,
         name: req.body.name,
         description: req.body.description,
         condiments: req.body.condiments.split(","),
@@ -93,9 +61,6 @@ app.post("/api/foods", (req, res) => {
     }
 
     createFood(food, res);
-
-   // foods.push(food);
-  //  res.send(foods);
 });
 
 const createFood = async(food, res) => {
@@ -134,21 +99,14 @@ const updateFood = async (req, res) => {
     res.send(food);
   };
 
-app.delete("/api/foods/:id", upload.single("img"), (req, res) => {
-    const id = parseInt(req.params.id);
-
-    const food = foods.find((f) => f.id === id);
-
-    if (!food) {
-        res.status(404).send("The food was not found");
-        return;
-    }
-
-    const index = foods.indexOf(food);
-    foods.splice(index, 1);
+  app.delete("/api/foods/:id", upload.single("img"), (req, res) => {
+    removeFood(res, req.params.id);
+  });
+  
+  const removeFood = async (res, id) => {
+    const food = await Food.findByIdAndDelete(id);
     res.send(food);
-
-});
+  };
 
 const validateFood = (food) => {
     const schema = Joi.object({
